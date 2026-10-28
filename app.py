@@ -7,7 +7,6 @@ import streamlit as st
 st.set_page_config(page_title="Prediksi Status Akademik", page_icon="🎓")
 
 
-# ---------- 1. Muat model & informasi model (sekali saja) ----------
 @st.cache_resource
 def load_model():
     return joblib.load("model_status_akademik.pkl")
@@ -24,7 +23,6 @@ info = load_info()
 FITUR = info["fitur_numerik"] + info["fitur_kategori"]
 rentang = info["rentang_fitur"]
 
-# ---------- 2. Sidebar: informasi model ----------
 with st.sidebar:
     st.header("Tentang Model")
     st.write(info["nama_model"])
@@ -38,7 +36,7 @@ st.write("Masukkan data mahasiswa untuk memprediksi status: **Aman**, **Waspada*
 
 tab1, tab2 = st.tabs(["Prediksi Satu Mahasiswa", "Prediksi dari File CSV"])
 
-# ---------- 3. Prediksi satu data ----------
+
 with tab1:
     with st.form("form_prediksi"):
         col1, col2 = st.columns(2)
@@ -61,7 +59,7 @@ with tab1:
         # peringatan jika input di luar rentang data latih
         luar = [c for c in rentang if not rentang[c][0] <= data[c].iloc[0] <= rentang[c][1]]
         if luar:
-            st.wastreamlit run app.pyrning(f"Nilai {', '.join(luar)} di luar rentang data latih; "
+            st.warning(f"Nilai {', '.join(luar)} di luar rentang data latih; "
                        "hasil prediksi bisa kurang akurat.")
 
         hasil = model.predict(data)[0]
@@ -71,7 +69,6 @@ with tab1:
         warna[hasil](f"Prediksi status: **{hasil}** (keyakinan {proba[hasil]:.0%})")
         st.bar_chart(proba.rename("probabilitas"))
 
-# ---------- 4. Prediksi banyak data dari CSV ----------
 with tab2:
     st.write("Unggah file CSV dengan kolom: " + ", ".join(f"`{c}`" for c in FITUR))
     file = st.file_uploader("Pilih file CSV", type="csv")
