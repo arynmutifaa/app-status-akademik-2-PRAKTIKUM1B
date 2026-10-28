@@ -61,7 +61,7 @@ with tab1:
         # peringatan jika input di luar rentang data latih
         luar = [c for c in rentang if not rentang[c][0] <= data[c].iloc[0] <= rentang[c][1]]
         if luar:
-            st.warning(f"Nilai {', '.join(luar)} di luar rentang data latih; "
+            st.wastreamlit run app.pyrning(f"Nilai {', '.join(luar)} di luar rentang data latih; "
                        "hasil prediksi bisa kurang akurat.")
 
         hasil = model.predict(data)[0]
